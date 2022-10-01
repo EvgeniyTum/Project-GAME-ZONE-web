@@ -1,0 +1,84 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+.header {
+  display: flex;
+  height: 50px;
+  margin-bottom: 10px;
+  min-width: 750px;
+}
+
+.header__logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  border: 1px solid red;
+  border-radius: 20px;
+}
+
+.project {
+  display: flex;
+  min-height: 400px;
+  font-size: 16;
+  font-family: Roboto, sans-serif;
+  font-weight: 400;
+}
+
+.project__left-menu {
+  width: 250px;
+  min-width: 170px;
+  border: 1px solid red;
+  border-radius: 20px;
+  margin-right: 10px;
+}
+
+.project__left-menu-item {
+  display: block;
+  height: 25px;
+}
+.project__left-menu-item:hover {
+  color: green;
+}
+
+
+.project__playing-field {
+  width: calc(100% - 520px);
+  min-width: 300px;
+  border: 1px solid red;
+  border-radius: 20px;
+  text-align: center;
+  padding: 50px 50px 50px 50px;
+}
+
+.project__statistics-field {
+  width: 250px;
+  min-width: 170px;
+  border: 1px solid red;
+  border-radius: 20px;
+  margin-left: 10px;
+  text-align: center;
+  padding: 50px 0px 0px 0px;
+}
+
+.project__statistics-field-status {
+  margin-top: 100px;
+}
+
+.project__statistics-field-item {
+  display: block;
+  height: 25px;
+}
+
+.project__statistics-field-item:hover {
+  color: green;
+}
+
+.btn {
+  padding-top: 100px;
+}
+
+.btn:hover {
+  color: green;
+}
+
