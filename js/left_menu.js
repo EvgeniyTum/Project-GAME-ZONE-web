@@ -1,11 +1,13 @@
 "use strict";
 
-const leftMenu = document.querySelectorAll('.project__left-menu-item'),
-      playingField = document.querySelector('.project__playing-field'),
-      statisticsField = document.querySelector('.project__statistics-field'),
-      statisticsFieldItem = statisticsField.querySelectorAll('.project__statistics-field-item'),
-      statisticsFieldStatus = statisticsField.querySelector('.project__statistics-field-status'),
-      logoInfo = document.querySelector('.header__logo img');
+import { chessPlayers, chessTableOfPlayers } from './chess.js';
+
+export const leftMenu = document.querySelectorAll('.project__left-menu-item'),
+  playingField = document.querySelector('.project__playing-field'),
+  statisticsField = document.querySelector('.project__statistics-field'),
+  statisticsFieldItem = statisticsField.querySelectorAll('.project__statistics-field-item'),
+  statisticsFieldStatus = statisticsField.querySelector('.project__statistics-field-status'),
+  logoInfo = document.querySelector('.header__logo img');
 
 const back = (item, data) => {
   item.addEventListener('click', (even) => {
@@ -32,12 +34,18 @@ leftMenu.forEach((item, i) => {
     even.preventDefault();
 
     console.log('Done left menu');
-    
-    playingField.innerHTML = `
-    <div>В разработке,но скоро будет готово!<br><br>А пока выбери другую игру!</div>
+
+    if (i === 0) {
+      console.log('Chess');
+      chessTableOfPlayers(chessPlayers);
+    } else {
+      playingField.innerHTML = `
+    <div>В разработке, но скоро будет готово!<br><br>А пока выбери другую игру!</div>
     <div class="btn">Назад</div>
     `;
-    back(playingField.querySelector('.btn'), 'Привет!<br> Выбери игру или создай свою!');
+      back(playingField.querySelector('.btn'), 'Привет!<br> Выбери игру или создай свою!');
+    }
+
   });
 });
 

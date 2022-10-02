@@ -82,3 +82,14 @@
   color: green;
 }
 
+.wellcome__game {
+  font-size: 20;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.input__players {
+  width: 100%;
+  margin: 10px 10px 10px 10px;
+}
+
