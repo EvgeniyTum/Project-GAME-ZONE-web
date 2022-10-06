@@ -75,7 +75,7 @@
 }
 
 .btn {
-  padding-top: 100px;
+  margin-top: 100px;
 }
 
 .btn:hover {
@@ -83,7 +83,7 @@
 }
 
 .wellcome__game {
-  font-size: 20;
+  font-size: 20px;
   font-weight: bold;
   margin-bottom: 20px;
 }
@@ -91,5 +91,23 @@
 .input__players {
   width: 100%;
   margin: 10px 10px 10px 10px;
+}
+
+.checkbox__type {
+  display: flex;
+  justify-content: center;
+  /* color: red; */
+}
+
+.chess__table {
+  /* border: 1px solid red; */
+  border-radius: 20px;
+  /* width: 100%; */
+}
+
+td, th {
+  border: 1px solid red;
+  /* padding: 10px 10px; */
+  margin: 10px 20px;
 }
 
