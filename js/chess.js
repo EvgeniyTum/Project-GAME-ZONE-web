@@ -45,10 +45,6 @@ export const chessTableOfPlayers = (obj) => {
       chessPlayers.typeGame.push("Обычная игра");
     }
 
-    // console.log(chessPlayers);
-
-    // playingField.innerHTML = `<div>Мы работаем над этим =)</div>`;
-
     playingField.innerHTML = '';
 
     let table = document.createElement('table');
@@ -68,8 +64,10 @@ export const chessTableOfPlayers = (obj) => {
         } if (i > 0 && j === 0) {
           td.innerHTML = `${chessPlayers.players[i - 1].player}`;
         } if (i === j && i > 0) {
+          td.classList.add('chess__table-result');
           td.style.cssText = `background: grey`;
         } else if (i !== j && i > 0 && j > 0) {
+          td.classList.add('chess__table-result');
           td.innerHTML = `
           <input type="number" min="0" max="1" step="0.5">
           <button class="ok">ok</button>
@@ -85,13 +83,44 @@ export const chessTableOfPlayers = (obj) => {
       }
     }
 
-    // let valueTableChessArr = [];
-    // for (let i = 1; i <= chessPlayers.players.length; i++) {
-    //   let arr =[];
-    //   arr.length = chessPlayers.players.length;
-    //   valueTableChessArr.push(arr);
-    //   arr = arr.slice(arr.length - 1);
-    // }
+    const chessTableResult = document.querySelectorAll('.chess__table-result');
+    const okBtn = document.querySelectorAll('.ok');
+
+    let arrChesTableResult = [];
+    let arr = [];
+    chessTableResult.forEach((item, i) => {
+      if ((i + 1) % chessPlayers.players.length === 0) {
+        arr.push(item);
+        arrChesTableResult.push(arr);
+        arr = arr.slice(arr.length);
+      } else if ((i + 1) % chessPlayers.players.length !== 0) {
+        arr.push(item);
+      }
+    });
+
+    okBtn.forEach((item, i) => {
+      item.addEventListener('click', (even) => {
+        even.preventDefault();
+
+        let inputScore = item.parentElement.firstElementChild.value;
+        if (inputScore === '1' || inputScore === '0' || inputScore === '0.5') {
+          item.parentElement.innerHTML = inputScore;
+
+          console.log(arrChesTableResult[0][1]);
+          for (let i = 0; i < chessPlayers.players.length; i++) {
+            for (let j = 0; j < chessPlayers.players.length; j++) {
+              if (arrChesTableResult[i][j].innerHTML === '1') {
+                arrChesTableResult[j][i].innerHTML = '0';
+              } if (arrChesTableResult[i][j].innerHTML === '0') {
+                arrChesTableResult[j][i].innerHTML = '1';
+              } if (arrChesTableResult[i][j].innerHTML === '0.5') {
+                arrChesTableResult[j][i].innerHTML = '0.5';
+              }
+            }
+          }
+        }
+      });
+    }); 
 
     
     let chessTableInfo = document.createElement('div');
@@ -115,10 +144,9 @@ export const chessTableOfPlayers = (obj) => {
     playingField.appendChild(endGameChess);
 
 
-    // console.log(valueTableChessArr);
-    console.log(table);
+    // console.log(arrChesTableResult);
 
-
+    // console.log(table);
   });
 };
 
