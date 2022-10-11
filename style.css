@@ -1,5 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 
+body {
+  background-color: rgb(202, 231, 235);
+}
+
 .header {
   display: flex;
   height: 50px;
@@ -111,5 +115,43 @@ td, th {
   /* padding: 10px 10px; */
   margin: 10px 20px;
   min-width: 60px;
+}
+
+.data__loss {
+  position:fixed;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  top:0px;
+  left:0px;
+  width:100vw;
+  height:100vh;
+}
+
+.data__in__loss {
+  width: 300px;
+  height: 200px;
+  padding: 10px 10px 10px 10px;
+
+  border: 1px solid green;
+  background-color: coral;
+  border-radius: 20px;
+}
+
+.data__in__loss div{
+  margin-top: 35px;
+}
+.loss__btn {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.loss__btn div:first-child {
+  margin-right: 10px;
+}
+
+.loss__btn div:hover {
+  color: green;
 }
 

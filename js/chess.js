@@ -1,6 +1,6 @@
 "use strict";
 
-import { playingField } from './left_menu.js';
+import { playingField, clickLeftMenu, leftMenu, body } from './left_menu.js';
 
 export const chessPlayers = {
   players: [],
