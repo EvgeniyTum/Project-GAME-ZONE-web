@@ -8,7 +8,8 @@ export const leftMenu = document.querySelectorAll('.project__left-menu-item'),
   startPlayingField = document.querySelector('.project__playing-field-welcome'),
   statisticsField = document.querySelector('.project__statistics-field'),
   statisticsFieldItem = statisticsField.querySelectorAll('.project__statistics-field-item'),
-  statisticsFieldStatus = statisticsField.querySelector('.project__statistics-field-status'),
+  statisticsFieldUl = statisticsField.querySelector('ul'),
+  statisticsFieldStart = statisticsField.querySelector('.project__statistics-field-start'),
   logoInfo = document.querySelector('.header__logo img');
 
 const back = (item, data) => {
@@ -44,7 +45,7 @@ const gameSelection = (j) => {
       <div>В разработке, но скоро будет готово!<br><br>А пока выбери другую игру!</div>
       <div class="btn">Назад</div>
       `;
-    back(playingField.querySelector('.btn'), 'Привет!<br> Выбери игру или создай свою!');
+    back(playingField.querySelector('.btn'), 'Привет!<br><br> Выбери игру или создай свою!');
   }
 };
 
@@ -69,6 +70,8 @@ const modalWindowDataLoss = () => {
   
         if (i === 0) {
           gameSelection(i);
+          chessPlayers.players = [];
+          chessPlayers.typeGame = [];
         } else {
           dataLoss.remove();
         }
@@ -94,14 +97,7 @@ statisticsFieldItem.forEach((item, i) => {
   item.addEventListener('click', (even) => {
     even.preventDefault();
 
-    console.log('Done statistics field');
-
-    statisticsFieldStatus.innerHTML = `
-    <div>Тут будет статистика по "${item.innerHTML}"</div>
-    <div class="btn">Назад</div>
-    `;
-
-    back(statisticsField.querySelector('.btn'), 'Здесь будет отображена статистика');
+    console.log(item);
   });
 });
 

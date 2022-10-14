@@ -24,6 +24,7 @@ body {
 .project {
   display: flex;
   min-height: 400px;
+  width: 100%;
   font-size: 16;
   font-family: Roboto, sans-serif;
   font-weight: 400;
@@ -61,19 +62,12 @@ body {
   border: 1px solid red;
   border-radius: 20px;
   margin-left: 10px;
-  text-align: center;
-  padding: 50px 0px 0px 0px;
-}
-
-.project__statistics-field-status {
-  margin-top: 100px;
 }
 
 .project__statistics-field-item {
   display: block;
-  height: 25px;
+  /* height: 25px; */
 }
-
 .project__statistics-field-item:hover {
   color: green;
 }
