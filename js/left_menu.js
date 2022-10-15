@@ -1,6 +1,22 @@
 "use strict";
 
 import { chessPlayers, chessTableOfPlayers } from './chess.js';
+import { mafiaPlayers, startMafiaGame } from './mafia.js';
+
+export const closeModalWindow = (str) => {
+  const dataLoss = document.createElement('div');
+  const dataInLoss = document.createElement('div');
+  dataLoss.classList.add('data__loss');
+  dataInLoss.classList.add('data__in__loss');
+  dataLoss.appendChild(dataInLoss);
+  playingField.appendChild(dataLoss);
+  dataInLoss.innerHTML = str;
+  document.querySelector('#btn').addEventListener('click', (even) => {
+    even.preventDefault();
+
+    dataLoss.remove();
+  });
+};
 
 export const leftMenu = document.querySelectorAll('.project__left-menu-item'),
   body = document.querySelector('body'),
@@ -39,6 +55,8 @@ const gameSelection = (j) => {
     playingField.appendChild(startPlayingField);
   } else if (j === 1) {
     chessTableOfPlayers(chessPlayers);
+  } else if (j === 3) {
+    startMafiaGame(mafiaPlayers);
   }
   else {
     playingField.innerHTML = `

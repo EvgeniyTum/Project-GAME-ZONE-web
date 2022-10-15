@@ -126,7 +126,7 @@ td, th {
   width: 300px;
   height: 200px;
   padding: 10px 10px 10px 10px;
-
+  
   border: 1px solid green;
   background-color: coral;
   border-radius: 20px;
@@ -147,5 +147,12 @@ td, th {
 
 .loss__btn div:hover {
   color: green;
+}
+
+.mafia__table {
+  display: block;
+  /* border: 1px solid red; */
+  border-radius: 20px;
+  /* width: 100%; */
 }
 

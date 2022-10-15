@@ -1,6 +1,6 @@
 "use strict";
 
-import { playingField, statisticsFieldStart, statisticsFieldUl} from './left_menu.js';
+import { playingField, statisticsFieldStart, statisticsFieldUl, closeModalWindow} from './left_menu.js';
 
 export const chessPlayers = {
   players: []
@@ -25,47 +25,35 @@ export const chessTableOfPlayers = (obj) => {
     const playersList = document.querySelector('.input__players');
 
     if (playersList.value.split(',').length < 2) {
-      const dataLoss = document.createElement('div');
-      const dataInLoss = document.createElement('div');
-      dataLoss.classList.add('data__loss');
-      dataInLoss.classList.add('data__in__loss');
-      dataLoss.appendChild(dataInLoss);
-      playingField.appendChild(dataLoss);
-      dataInLoss.innerHTML = `
-        <div>Вы ввели мало игроков! Требуется не менее двух, чтобы начать!</div>
-        <div class="loss__btn">
-        <div id="btn">Понятно!</div>
-        </div>
-        `;
-        document.querySelector('#btn').addEventListener('click', (even) => {
-          even.preventDefault();
-
-          dataLoss.remove();
-        });
+      closeModalWindow(`
+      <div>Вы ввели мало игроков! Требуется не менее двух, чтобы начать!</div>
+      <div class="loss__btn">
+      <div id="btn">Понятно!</div>
+      </div>`);
     } else {
       playersList.value.split(',').forEach((item) => {
         const player = { name: item.trim(), score: 0 };
-        chessPlayers.players.push(player);
+        obj.players.push(player);
       });
 
-      playingField.innerHTML = '';
+      playingField.innerHTML = '<div>Шахматы</div>';
 
       let table = document.createElement('table');
       table.classList.add('chess__table');
       playingField.appendChild(table);
 
-      for (let i = 0; i < chessPlayers.players.length + 1; i++) {
+      for (let i = 0; i < obj.players.length + 1; i++) {
         let tr = document.createElement('tr');
         table.appendChild(tr);
-        for (let j = 0; j < chessPlayers.players.length + 1; j++) {
+        for (let j = 0; j < obj.players.length + 1; j++) {
           let td = document.createElement('td');
           tr.appendChild(td);
           if (i === 0 & j > 0) {
-            td.innerHTML = `${chessPlayers.players[j - 1].name}`;
+            td.innerHTML = `${obj.players[j - 1].name}`;
           } if (i === 0 & j === 0) {
             td.innerHTML = 'Имя игрока';
           } if (i > 0 && j === 0) {
-            td.innerHTML = `${chessPlayers.players[i - 1].name}`;
+            td.innerHTML = `${obj.players[i - 1].name}`;
           } if (i === j && i > 0) {
             td.classList.add('chess__table-result');
             td.style.cssText = `background: grey`;
@@ -85,11 +73,11 @@ export const chessTableOfPlayers = (obj) => {
       let arrChesTableResult = [];
       let arr = [];
       chessTableResult.forEach((item, i) => {
-        if ((i + 1) % chessPlayers.players.length === 0) {
+        if ((i + 1) % obj.players.length === 0) {
           arr.push(item);
           arrChesTableResult.push(arr);
           arr = arr.slice(arr.length);
-        } else if ((i + 1) % chessPlayers.players.length !== 0) {
+        } else if ((i + 1) % obj.players.length !== 0) {
           arr.push(item);
         }
       });
@@ -102,8 +90,8 @@ export const chessTableOfPlayers = (obj) => {
           if (inputScore === '1' || inputScore === '0' || inputScore === '0.5') {
             item.parentElement.innerHTML = inputScore;
 
-            for (let i = 0; i < chessPlayers.players.length; i++) {
-              for (let j = 0; j < chessPlayers.players.length; j++) {
+            for (let i = 0; i < obj.players.length; i++) {
+              for (let j = 0; j < obj.players.length; j++) {
                 if (arrChesTableResult[i][j].innerHTML === '1') {
                   arrChesTableResult[j][i].innerHTML = '0';
                 } if (arrChesTableResult[i][j].innerHTML === '0') {
@@ -132,12 +120,12 @@ export const chessTableOfPlayers = (obj) => {
       <div>Ничья - поставь 0,5</div>
     `;
 
-      let endGameChess = document.createElement('div');
-      endGameChess.classList.add('btn');
-      endGameChess.innerHTML = 'Закончить игру!';
-      playingField.appendChild(endGameChess);
+      let endGame = document.createElement('div');
+      endGame.classList.add('btn');
+      endGame.innerHTML = 'Закончить игру!';
+      playingField.appendChild(endGame);
 
-      endGameChess.addEventListener('click', (even) => {
+      endGame.addEventListener('click', (even) => {
         even.preventDefault();
 
         const dataLoss = document.createElement('div');
@@ -165,18 +153,18 @@ export const chessTableOfPlayers = (obj) => {
                 }
               });
 
-              for (let i = 0; i < chessPlayers.players.length; i++) {
-                for (let j = 0; j < chessPlayers.players.length; j++) {
+              for (let i = 0; i < obj.players.length; i++) {
+                for (let j = 0; j < obj.players.length; j++) {
                   if (arrChesTableResult[i][j].innerHTML === '1') {
-                    chessPlayers.players[i].score += 1;
+                    obj.players[i].score += 1;
                   } if (arrChesTableResult[i][j].innerHTML === '0.5') {
-                    chessPlayers.players[i].score += 0.5;
+                    obj.players[i].score += 0.5;
                   }
                 }
               }
 
               const sortScore = [];
-              const { players } = chessPlayers;
+              const { players } = obj;
               for (let player of players) {
                 sortScore.push(Object.values(player));
 
@@ -191,7 +179,7 @@ export const chessTableOfPlayers = (obj) => {
               let tableGameResult = document.createElement('table');
               tableGameResult.classList.add('chess__table');
 
-              for (let i = 0; i < chessPlayers.players.length + 1; i++) {
+              for (let i = 0; i < obj.players.length + 1; i++) {
                 let tr = document.createElement('tr');
                 tableGameResult.appendChild(tr);
                 for (let j = 0; j < 3; j++) {
@@ -213,7 +201,7 @@ export const chessTableOfPlayers = (obj) => {
                 }
               }
               playingField.appendChild(tableGameResult);
-              endGameChess.remove();
+              endGame.remove();
               dataLoss.remove();
 
               statisticsFieldStart.remove();
@@ -227,7 +215,7 @@ export const chessTableOfPlayers = (obj) => {
               }
 
               liStatisticChessGame.innerHTML = `
-              Шахматы: ${arrNamePlayers.join(', ')}$<br> -(${(new Date()).toISOString().slice(0,10)})
+              Шахматы: ${arrNamePlayers.join(', ')}<br> -(${(new Date()).toISOString().slice(0,10)})
               `;
 
               liStatisticChessGame.addEventListener('click', (even) => {
@@ -238,10 +226,13 @@ export const chessTableOfPlayers = (obj) => {
                 const dataLoss = document.createElement('div');
                 const dataInLoss = document.createElement('div');
                 const close = document.createElement('div');
+                const nameGame = document.createElement('div');
                 close.classList.add('btn');
                 close.innerHTML = 'Закрыть';
+                nameGame.innerHTML = 'Шахматы<br>';
                 dataLoss.classList.add('data__loss');
                 dataInLoss.classList.add('result__game');
+                dataInLoss.appendChild(nameGame);
                 dataInLoss.appendChild(copyTableGameResult);
                 dataLoss.appendChild(dataInLoss);
                 playingField.appendChild(dataLoss);
@@ -253,8 +244,8 @@ export const chessTableOfPlayers = (obj) => {
                 });
               });
 
-              chessPlayers.players = [];
-              chessPlayers.typeGame = [];
+              obj.players = [];
+              obj.typeGame = [];
             } else {
               dataLoss.remove();
             }
