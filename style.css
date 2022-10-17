@@ -149,7 +149,7 @@ td, th {
   color: green;
 }
 
-.mafia__table {
+.game__table {
   display: block;
   /* border: 1px solid red; */
   border-radius: 20px;

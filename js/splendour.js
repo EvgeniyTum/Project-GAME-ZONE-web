@@ -1,62 +1,62 @@
 "use strict";
 
-import { playingField, closeModalWindow, statisticsFieldStart, statisticsFieldUl } from './left_menu.js';
+import { playingField, statisticsFieldStart, statisticsFieldUl, closeModalWindow} from './left_menu.js';
 
-export const mafiaPlayers = {
+export const splendourPlayers = {
   players: []
 };
 
-export const startMafiaGame = (obj) => {
+export const startSplendourGame = (obj) => {
   playingField.innerHTML = `
   <form class="form">
     <div class="wellcome__game">Начинаем новую игру!</div>
     <div>
-      <span>Введите имена игроков через запятую (не менее трёх):</span>
+      <span>Введите имена игроков через запятую (2 - 4 игрока):</span>
       <br>
       <input type="text" class="input__players" placeholder="Имена через запятую">
   </form>
   <div class="btn">Старт!</div>
   `;
 
-  const startMafia = document.querySelector('.btn');
-  startMafia.addEventListener('click', (even) => {
+  const startSplendour = document.querySelector('.btn');
+  startSplendour.addEventListener('click', (even) => {
     even.preventDefault();
 
     const playersList = document.querySelector('.input__players');
 
-    if (playersList.value.split(',').length < 3) {
-      closeModalWindow(`<div>Вы ввели мало игроков! Требуется не менее трёх, чтобы начать!</div>
+    if (playersList.value.split(',').length < 2 || playersList.value.split(',').length > 4) {
+      closeModalWindow(`<div>Вы ввели мало игроков! Требуется от двух до четырёх игроков, чтобы начать!</div>
         <div class="loss__btn">
         <div id="btn">Понятно!</div>
         </div>`);
     } else {
 
       playersList.value.split(',').forEach((item) => {
-        const player = { name: item.trim() };
+        const player = { name: item.trim(), score: 0 };
         obj.players.push(player);
       });
 
-      playingField.innerHTML = '<div>Мафия</div>';
+      console.log(splendourPlayers);
+
+      playingField.innerHTML = '<div>Роскошь</div>';
 
       let table = document.createElement('table');
       for (let i = 0; i < 2; i++) {
         let tr = document.createElement('tr');
         table.appendChild(tr);
-        for (let j = 0; j < 3; j++) {
+        for (let j = 0; j < obj.players.length + 1; j++) {
           let td = document.createElement('td');
           tr.appendChild(td);
           if (i === 0 && j === 0) {
             td.innerHTML = '';
-          } if (i === 0 && j === 1) {
-            td.innerHTML = 'Мафия';
-          } if (i === 0 && j === 2) {
-            td.innerHTML = 'Город';
+          } if (i === 0 && j > 0) {
+            td.innerHTML = obj.players[j - 1].name;
           } if (i === 1 && j === 0) {
             td.innerHTML = `Раунд №${i}`;
           } if (i > 0 && j > 0) {
-            td.classList.add('mafia__table-result');
+            td.classList.add('table-result');
             td.innerHTML = `
-              <input type="number" min="0" max="1" step="1">
+              <input type="number" min="1" max="1" step="1">
               <button class="ok">ok</button>
               `;
           }
@@ -66,15 +66,15 @@ export const startMafiaGame = (obj) => {
       playingField.appendChild(table);
 
       const endRound = () => {
-        const mafiaTableResult = document.querySelectorAll('.mafia__table-result');
-        let arrMafiaTableResult = [];
+        const tableResult = document.querySelectorAll('.table-result');
+        let arrTableResult = [];
         let arr = [];
-        mafiaTableResult.forEach((item, i) => {
-          if ((i + 1) % 2 === 0) {
+        tableResult.forEach((item, i) => {
+          if ((i + 1) % obj.players.length === 0) {
             arr.push(item);
-            arrMafiaTableResult.push(arr);
+            arrTableResult.push(arr);
             arr = arr.slice(arr.length);
-          } else if ((i + 1) % 2 !== 0) {
+          } else if ((i + 1) % obj.players.length !== 0) {
             arr.push(item);
           }
         });
@@ -86,37 +86,35 @@ export const startMafiaGame = (obj) => {
             even.preventDefault();
 
             let inputScore = item.parentElement.firstElementChild.value;
-            if (inputScore === '1' || inputScore === '0') {
+            if (inputScore === '1') {
               item.parentElement.innerHTML = inputScore;
-
-              if (arrMafiaTableResult[arrMafiaTableResult.length - 1][0].innerHTML === '1') {
-                arrMafiaTableResult[arrMafiaTableResult.length - 1][1].innerHTML = '0';
-              } if (arrMafiaTableResult[arrMafiaTableResult.length - 1][0].innerHTML === '0') {
-                arrMafiaTableResult[arrMafiaTableResult.length - 1][1].innerHTML = '1';
-              } if (arrMafiaTableResult[arrMafiaTableResult.length - 1][1].innerHTML === '1') {
-                arrMafiaTableResult[arrMafiaTableResult.length - 1][0].innerHTML = '0';
-              } if (arrMafiaTableResult[arrMafiaTableResult.length - 1][1].innerHTML === '0') {
-                arrMafiaTableResult[arrMafiaTableResult.length - 1][0].innerHTML = '1';
+              
+              for (let h = 0; h < arrTableResult[arrTableResult.length - 1].length; h++) {
+                if (arrTableResult[arrTableResult.length - 1][h].innerHTML === '1') {
+                  arrTableResult[arrTableResult.length - 1][h].innerHTML = '1';
+                } else {
+                  arrTableResult[arrTableResult.length - 1][h].innerHTML = '0';
+                }
               }
-
+              
               let tr = document.createElement('tr');
               table.appendChild(tr);
-              for (let i = 0; i < 3; i++) {
+              for (let i = 0; i < obj.players.length + 1; i++) {
                 let td = document.createElement('td');
                 tr.appendChild(td);
                 if (i === 0) {
-                  td.innerHTML = `Раунд №${arrMafiaTableResult.length + 1}`;
+                  td.innerHTML = `Раунд №${arrTableResult.length + 1}`;
                 } if (i > 0) {
-                  td.classList.add('mafia__table-result');
+                  td.classList.add('table-result');
                   td.innerHTML = `
-                <input type="number" min="0" max="1" step="1">
+                <input type="number" min="1" max="1" step="1">
                 <button class="ok">ok</button>
                 `;
                 }
               }
               endRound();
             } else {
-              closeModalWindow(`<div>Вы ввели неправильное значение! Победа - 1, поражение - 0!</div>
+              closeModalWindow(`<div>Вы ввели неправильное значение! Победа - 1</div>
               <div class="loss__btn">
               <div id="btn">Понятно!</div>
               </div>`);
@@ -155,42 +153,69 @@ export const startMafiaGame = (obj) => {
               table.lastElementChild.remove();
 
               const gameResult = document.createElement('div');
-              
-              const mafiaTableResult = document.querySelectorAll('.mafia__table-result');
-              let arrMafiaTableResult = [];
+
+              const tableResult = document.querySelectorAll('.table-result');
+              let arrTableResult = [];
               let arr = [];
-              mafiaTableResult.forEach((item, i) => {
-                if (i < mafiaTableResult.length) {
-                  if ((i + 1) % 2 === 0) {
-                    arr.push(item.innerHTML);
-                    arrMafiaTableResult.push(arr);
-                    arr = arr.slice(arr.length);
-                  } else if ((i + 1) % 2 !== 0) {
-                    arr.push(item.innerHTML);
-                  }
+              tableResult.forEach((item, i) => {
+                if ((i + 1) % obj.players.length === 0) {
+                  arr.push(item.innerHTML);
+                  arrTableResult.push(arr);
+                  arr = arr.slice(arr.length);
+                } else if ((i + 1) % obj.players.length !== 0) {
+                  arr.push(item.innerHTML);
                 }
               });
 
-              let sumMafiaWin = 0;
-              let sumCityWin = 0;
-              for (let round of arrMafiaTableResult) {
-                if (round[0] == 1) {
-                  sumMafiaWin += 1;
-                } else {
-                  sumCityWin += 1;
+              console.log(arrTableResult);
+
+              for (let i = 0; i < arrTableResult.length; i++) {
+                for (let j = 0; j < arrTableResult[i].length; j++) {
+                  if (arrTableResult[i][j] == 1) {
+                    obj.players[j].score += 1;
+                  }
                 }
               }
-              if (sumMafiaWin > sumCityWin) {
-                gameResult.innerHTML = `Победила МАФИЯ со счетом:<br><br>${sumMafiaWin} : ${sumCityWin}`;
-              } else if (sumMafiaWin < sumCityWin) {
-                gameResult.innerHTML = `Победил ГОРОД со счетом:<br><br>${sumCityWin} : ${sumMafiaWin}`;
-              } else if (arrMafiaTableResult.length === 0) {
-                gameResult.innerHTML = 'Игра не состоялась';
-              } else {
-                gameResult.innerHTML = `Ничья со счетом:<br><br>${sumCityWin} : ${sumMafiaWin}`;
+
+              const sortScore = [];
+              const { players } = obj;
+              for (let player of players) {
+                sortScore.push(Object.values(player));
+
               }
 
-              playingField.appendChild(gameResult);
+              sortScore.sort((function (index) {
+                return function (a, b) {
+                  return (a[index] === b[index] ? 0 : (a[index] < b[index] ? 1 : -1));
+                };
+              })(1));
+
+              let tableGameResult = document.createElement('table');
+              tableGameResult.classList.add('game__table');
+
+              for (let i = 0; i < obj.players.length + 1; i++) {
+                let tr = document.createElement('tr');
+                tableGameResult.appendChild(tr);
+                for (let j = 0; j < 3; j++) {
+                  let td = document.createElement('td');
+                  tr.appendChild(td);
+                  if (i === 0 & j === 0) {
+                    td.innerHTML = `Место`;
+                  } if (i === 0 & j === 1) {
+                    td.innerHTML = `Имя`;
+                  } if (i === 0 & j === 2) {
+                    td.innerHTML = `Счет`;
+                  } if (i > 0 & j === 0) {
+                    td.innerHTML = `${i} место`;
+                  } if (i > 0 & j === 1) {
+                    td.innerHTML = `${sortScore[i - 1][0]}`;
+                  } if (i > 0 & j === 2) {
+                    td.innerHTML = `${sortScore[i - 1][1]}`;
+                  }
+                }
+              }
+
+              playingField.appendChild(tableGameResult);
               endGame.remove();
               dataLoss.remove();
 
@@ -200,18 +225,18 @@ export const startMafiaGame = (obj) => {
               statisticsFieldUl.appendChild(liStatisticGame);
 
               const arrNamePlayers = [];
-              for (let player of mafiaPlayers.players) {
+              for (let player of splendourPlayers.players) {
                 arrNamePlayers.push(Object.values(player)[0]);
               }
 
               liStatisticGame.innerHTML = `
-              Мафия: ${arrNamePlayers.join(', ')}<br>${(new Date()).toISOString().slice(0,10)}
+              Роскошь: ${arrNamePlayers.join(', ')}<br>${(new Date()).toISOString().slice(0,10)}
               `;
 
               liStatisticGame.addEventListener('click', (even) => {
                 even.preventDefault();
                 
-                const copyTableGameResult = gameResult.cloneNode(true);
+                const copyTableGameResult = tableGameResult.cloneNode(true);
 
                 const dataLoss = document.createElement('div');
                 const dataInLoss = document.createElement('div');
@@ -219,7 +244,7 @@ export const startMafiaGame = (obj) => {
                 const nameGame = document.createElement('div');
                 close.classList.add('btn');
                 close.innerHTML = 'Закрыть';
-                nameGame.innerHTML = 'Мафия<br>';
+                nameGame.innerHTML = 'Роскошь<br>';
                 dataLoss.classList.add('data__loss');
                 dataInLoss.classList.add('result__game');
                 dataInLoss.appendChild(nameGame);

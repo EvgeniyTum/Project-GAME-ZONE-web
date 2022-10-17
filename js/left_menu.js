@@ -2,6 +2,7 @@
 
 import { chessPlayers, chessTableOfPlayers } from './chess.js';
 import { mafiaPlayers, startMafiaGame } from './mafia.js';
+import { splendourPlayers, startSplendourGame } from './splendour.js';
 
 export const closeModalWindow = (str) => {
   const dataLoss = document.createElement('div');
@@ -55,6 +56,8 @@ const gameSelection = (j) => {
     playingField.appendChild(startPlayingField);
   } else if (j === 1) {
     chessTableOfPlayers(chessPlayers);
+  } else if (j === 2) {
+    startSplendourGame(splendourPlayers);
   } else if (j === 3) {
     startMafiaGame(mafiaPlayers);
   }
