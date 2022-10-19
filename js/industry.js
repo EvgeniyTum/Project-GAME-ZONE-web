@@ -1,16 +1,16 @@
 "use strict";
 
-import { playingField, statisticsFieldStart, statisticsFieldUl, closeModalWindow, 
-  infoModalWindow} from './left_menu.js';
+import { playingField,
+   statisticsFieldStart, statisticsFieldUl, closeModalWindow, infoModalWindow } from './left_menu.js';
 
-export const splendourPlayers = {
+export const industryPlayers = {
   players: []
 };
 
-export const startSplendourGame = (obj) => {
+export const startIndustryGame = (obj) => {
   playingField.innerHTML = `
   <form class="form">
-    <div class="wellcome__game">Начинаем новую игру в Роскошь!</div>
+    <div class="wellcome__game">Начинаем новую игру в Индустрию!</div>
     <div>
       <span>Введите имена игроков через запятую (2 - 4 игрока):</span>
       <br>
@@ -33,11 +33,11 @@ export const startSplendourGame = (obj) => {
     } else {
 
       playersList.value.split(',').forEach((item) => {
-        const player = { name: item.trim(), score: 0 };
+        const player = { name: item.trim(), score: 0, scoreRound: 0 };
         obj.players.push(player);
       });
 
-      playingField.innerHTML = `<div>Роскошь</div><br>
+      playingField.innerHTML = `<div>Индустрия</div><br>
         <div>Не знаешь, как пользоваться таблицей?</div>
       `;
 
@@ -50,27 +50,32 @@ export const startSplendourGame = (obj) => {
       for (let i = 0; i < 2; i++) {
         let tr = document.createElement('tr');
         table.appendChild(tr);
-        for (let j = 0; j < obj.players.length + 1; j++) {
+        for (let j = 0; j < obj.players.length + 2; j++) {
           let td = document.createElement('td');
           tr.appendChild(td);
           if (i === 0 && j === 0) {
             td.innerHTML = '';
-          } if (i === 0 && j > 0) {
+          } if (i === 0 && j > 0 && j < obj.players.length + 1) {
             td.innerHTML = obj.players[j - 1].name;
-          } if (i === 1 && j === 0) {
-            td.innerHTML = `Раунд №${i}`;
-          } if (i > 0 && j > 0) {
+          } if (i > 0 && j === 0) {
+            td.innerHTML = `Игра №${i}`;
+          } if (i > 0 && j > 0 && j < obj.players.length + 1) {
             td.classList.add('table-result');
             td.innerHTML = `
-              <input type="number" min="1" max="1" step="1">
+              <input type="number" min="0" max="200" step="1">
+              `;
+          } if (i > 0 && j > obj.players.length) {
+            td.innerHTML = `
               <button class="ok">ok</button>
               `;
           }
         }
       }
+
       table.classList.add('game__table');
       playingField.appendChild(table);
 
+      let k = 0;
       const endRound = () => {
         const tableResult = document.querySelectorAll('.table-result');
         let arrTableResult = [];
@@ -87,48 +92,85 @@ export const startSplendourGame = (obj) => {
 
         const okBtn = document.querySelectorAll('.ok');
         okBtn.forEach((item) => {
+          const testInputValue = (arr, num) => {
+            let test = true;
+            for (let i = 0; i < arr[0].length; i++) {
+              if (arr[num][i].lastElementChild.value === '') {
+                test = false;
+              }
+            }
+            return test;
+          };
 
-          item.addEventListener('click', (even) => {
+          item.addEventListener('click', function clickOnBtn(even) {
             even.preventDefault();
 
-            let inputScore = item.parentElement.firstElementChild.value;
-            if (inputScore === '1') {
-              item.parentElement.innerHTML = inputScore;
-              
-              for (let h = 0; h < arrTableResult[arrTableResult.length - 1].length; h++) {
-                if (arrTableResult[arrTableResult.length - 1][h].innerHTML === '1') {
-                  arrTableResult[arrTableResult.length - 1][h].innerHTML = '1';
-                } else {
-                  arrTableResult[arrTableResult.length - 1][h].innerHTML = '0';
-                }
-              }
-              
-              let tr = document.createElement('tr');
-              table.appendChild(tr);
-              for (let i = 0; i < obj.players.length + 1; i++) {
-                let td = document.createElement('td');
-                tr.appendChild(td);
-                if (i === 0) {
-                  td.innerHTML = `Раунд №${arrTableResult.length + 1}`;
-                } if (i > 0) {
-                  td.classList.add('table-result');
-                  td.innerHTML = `
-                <input type="number" min="1" max="1" step="1">
-                <button class="ok">ok</button>
-                `;
-                }
-              }
-              endRound();
-            } else {
-              closeModalWindow(`<div>Вы ввели неправильное значение! Победа - 1</div>
+            if (!testInputValue(arrTableResult, k)) {
+              closeModalWindow(`<div>Внесите количество монет каждого игрока на конец этого раунда!</div>
               <div class="loss__btn">
               <div id="btn">Понятно!</div>
               </div>`);
+            } else {
+              for (let i = 0; i < obj.players.length; i++) {
+                obj.players[i].score = Number(arrTableResult[arrTableResult.length - 1][i].lastElementChild.value);
+              }
+              const sortScore = [];
+              const { players } = obj;
+              let testScore = 0;
+              let numTestScore = 0;
+              for (let player of players) {
+                sortScore.push(Object.values(player)[1]);
+              }
+              for (let i = 0; i < sortScore.length; i++) {
+                if (Number(sortScore[i]) > testScore) {
+                  testScore = sortScore[i];
+                  numTestScore = i;
+                }
+              }
+
+              for (let i = 0; i < arrTableResult[0].length; i++) {
+                if (i === numTestScore) {
+                  arrTableResult[arrTableResult.length - 1][i].innerHTML = `
+                    1 <div style="font-size: 10px">(монет за игру: ${sortScore[i]})</div>`;
+                  obj.players[i].scoreRound += 1;
+                } else {
+                  arrTableResult[arrTableResult.length - 1][i].innerHTML = `0 
+                    <div style="font-size: 10px">(монет за игру: ${sortScore[i]} )</div>`;
+                }
+              }
+
+              let tr = document.createElement('tr');
+              table.appendChild(tr);
+              for (let i = 0; i < obj.players.length + 2; i++) {
+                let td = document.createElement('td');
+                tr.appendChild(td);
+                if (i === 0) {
+                  td.innerHTML = `Игра №${arrTableResult.length + 1}`;
+                } if (i > 0 && i < obj.players.length + 1) {
+                  td.classList.add('table-result');
+                  td.innerHTML = `
+                      <input type="number" min="0" max="200" step="1">
+                      `;
+                } if (i > obj.players.length) {
+                  td.innerHTML = `
+                      <button class="ok">ok</button>
+                      `;
+                }
+              }
+
+              for (let i = 0; i < obj.players.length; i++) {
+                obj.players[i].score = 0;
+              }
+              item.remove();
+              k += 1;
+              console.log(k);
+              endRound();
             }
           });
         });
       };
       endRound();
+
 
       let endGame = document.createElement('div');
       endGame.classList.add('btn');
@@ -158,26 +200,7 @@ export const startSplendourGame = (obj) => {
             if (i === 0) {
               table.lastElementChild.remove();
 
-              const tableResult = document.querySelectorAll('.table-result');
-              let arrTableResult = [];
-              let arr = [];
-              tableResult.forEach((item, i) => {
-                if ((i + 1) % obj.players.length === 0) {
-                  arr.push(item.innerHTML);
-                  arrTableResult.push(arr);
-                  arr = arr.slice(arr.length);
-                } else if ((i + 1) % obj.players.length !== 0) {
-                  arr.push(item.innerHTML);
-                }
-              });
 
-              for (let i = 0; i < arrTableResult.length; i++) {
-                for (let j = 0; j < arrTableResult[i].length; j++) {
-                  if (arrTableResult[i][j] == 1) {
-                    obj.players[j].score += 1;
-                  }
-                }
-              }
 
               const sortScore = [];
               const { players } = obj;
@@ -188,7 +211,7 @@ export const startSplendourGame = (obj) => {
 
               sortScore.sort((function (index) {
                 return function (a, b) {
-                  return (a[index] === b[index] ? 0 : (a[index] < b[index] ? 1 : -1));
+                  return (a[index] === b[index] ? 0 : (a[index] > b[index] ? 1 : -1));
                 };
               })(1));
 
@@ -212,7 +235,7 @@ export const startSplendourGame = (obj) => {
                   } if (i > 0 & j === 1) {
                     td.innerHTML = `${sortScore[i - 1][0]}`;
                   } if (i > 0 & j === 2) {
-                    td.innerHTML = `${sortScore[i - 1][1]}`;
+                    td.innerHTML = `${sortScore[i - 1][2]}`;
                   }
                 }
               }
@@ -234,7 +257,7 @@ export const startSplendourGame = (obj) => {
               const nameStatisticGame = document.createElement('div');
               nameStatisticGame.classList.add('project__statistics-field-name');
               nameStatisticGame.innerHTML = `
-              Роскошь: ${arrNamePlayers.join(', ')}
+              Индустрия: ${arrNamePlayers.join(', ')}
               -(${(new Date()).toISOString().slice(0, 10)})
               `;
               liStatisticGame.appendChild(nameStatisticGame);
@@ -255,7 +278,7 @@ export const startSplendourGame = (obj) => {
 
               nameStatisticGame.addEventListener('click', (even) => {
                 even.preventDefault();
-                
+
                 const copyTableGameResult = tableGameResult.cloneNode(true);
 
                 const dataLoss = document.createElement('div');
@@ -264,7 +287,7 @@ export const startSplendourGame = (obj) => {
                 const nameGame = document.createElement('div');
                 close.classList.add('btn');
                 close.innerHTML = 'Закрыть';
-                nameGame.innerHTML = 'Роскошь<br>';
+                nameGame.innerHTML = 'Индустрия<br>';
                 dataLoss.classList.add('data__loss');
                 dataInLoss.classList.add('result__game');
                 dataInLoss.appendChild(nameGame);

@@ -1,6 +1,9 @@
 "use strict";
 
-import { playingField, statisticsFieldStart, statisticsFieldUl, closeModalWindow} from './left_menu.js';
+import {
+  playingField, statisticsFieldStart, statisticsFieldUl, closeModalWindow,
+  infoModalWindow
+} from './left_menu.js';
 
 export const chessPlayers = {
   players: []
@@ -9,7 +12,7 @@ export const chessPlayers = {
 export const chessTableOfPlayers = (obj) => {
   playingField.innerHTML = `
   <form class="form">
-    <div class="wellcome__game">Начинаем новую игру!</div>
+    <div class="wellcome__game">Начинаем новую игру в Шахматы!</div>
     <div>
       <span>Введите имена игроков через запятую (не менее двух):</span>
       <br>
@@ -26,7 +29,7 @@ export const chessTableOfPlayers = (obj) => {
 
     if (playersList.value.split(',').length < 2) {
       closeModalWindow(`
-      <div>Вы ввели мало игроков! Требуется не менее двух, чтобы начать!</div>
+      <div>Вы ввели мало или много игроков! Требуется не менее двух, чтобы начать!</div>
       <div class="loss__btn">
       <div id="btn">Понятно!</div>
       </div>`);
@@ -36,7 +39,14 @@ export const chessTableOfPlayers = (obj) => {
         obj.players.push(player);
       });
 
-      playingField.innerHTML = '<div>Шахматы</div>';
+      playingField.innerHTML = `<div>Шахматы</div><br>
+        <div>Не знаешь, как пользоваться таблицей?</div>
+      `;
+
+      infoModalWindow(`<div>Жми INFO</div>`, `<div>Тут будет описание, как пользоваться таблицей!</div>
+      <div class="loss__btn">
+      <div id="btn">Понятно!</div>
+      </div>`, playingField);
 
       let table = document.createElement('table');
       table.classList.add('chess__table');
@@ -214,13 +224,31 @@ export const chessTableOfPlayers = (obj) => {
                 arrNamePlayers.push(Object.values(player)[0]);
               }
 
-              liStatisticChessGame.innerHTML = `
-              Шахматы: ${arrNamePlayers.join(', ')}<br> -(${(new Date()).toISOString().slice(0,10)})
+              const nameStatisticChessGame = document.createElement('div');
+              nameStatisticChessGame.classList.add('project__statistics-field-name');
+              nameStatisticChessGame.innerHTML = `
+              Шахматы: ${arrNamePlayers.join(', ')}
+              -(${(new Date()).toISOString().slice(0, 10)})
               `;
+              liStatisticChessGame.appendChild(nameStatisticChessGame);
 
-              liStatisticChessGame.addEventListener('click', (even) => {
+              const deleteBtn = document.createElement('div');
+              deleteBtn.innerHTML = `<img class="delete" src="icons/trash.png" alt="delete">`;
+              liStatisticChessGame.appendChild(deleteBtn);
+
+              console.log(nameStatisticChessGame);
+              document.querySelectorAll('.delete').forEach((item) => {
+                item.addEventListener('click', (even) => {
+                  even.preventDefault();
+
+                  item.parentElement.parentElement.remove();
+
+                });
+              });
+
+              nameStatisticChessGame.addEventListener('click', (even) => {
                 even.preventDefault();
-                
+
                 const copyTableGameResult = tableGameResult.cloneNode(true);
 
                 const dataLoss = document.createElement('div');
@@ -245,7 +273,6 @@ export const chessTableOfPlayers = (obj) => {
               });
 
               obj.players = [];
-              obj.typeGame = [];
             } else {
               dataLoss.remove();
             }

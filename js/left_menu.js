@@ -3,6 +3,22 @@
 import { chessPlayers, chessTableOfPlayers } from './chess.js';
 import { mafiaPlayers, startMafiaGame } from './mafia.js';
 import { splendourPlayers, startSplendourGame } from './splendour.js';
+import { citadelsPlayers, startCitadelsGame } from './citadels.js';
+import { industryPlayers, startIndustryGame } from './industry.js';
+
+
+
+export const leftMenu = document.querySelectorAll('.project__left-menu-item'),
+  body = document.querySelector('body'),
+  playingField = document.querySelector('.project__playing-field'),
+  startPlayingField = document.querySelector('.project__playing-field-welcome'),
+  statisticsField = document.querySelector('.project__statistics-field'),
+  statisticsFieldItem = statisticsField.querySelectorAll('.project__statistics-field-item'),
+  statisticsFieldUl = statisticsField.querySelector('ul'),
+  statisticsFieldStart = statisticsField.querySelector('.project__statistics-field-start'),
+  logoInfo = document.querySelector('.header__logo img'),
+  deleteBtn = document.querySelectorAll('.delete');
+
 
 export const closeModalWindow = (str) => {
   const dataLoss = document.createElement('div');
@@ -19,22 +35,13 @@ export const closeModalWindow = (str) => {
   });
 };
 
-export const leftMenu = document.querySelectorAll('.project__left-menu-item'),
-  body = document.querySelector('body'),
-  playingField = document.querySelector('.project__playing-field'),
-  startPlayingField = document.querySelector('.project__playing-field-welcome'),
-  statisticsField = document.querySelector('.project__statistics-field'),
-  statisticsFieldItem = statisticsField.querySelectorAll('.project__statistics-field-item'),
-  statisticsFieldUl = statisticsField.querySelector('ul'),
-  statisticsFieldStart = statisticsField.querySelector('.project__statistics-field-start'),
-  logoInfo = document.querySelector('.header__logo img');
-
-const back = (item, data) => {
-  item.addEventListener('click', (even) => {
-    even.preventDefault();
-    console.log('Done back');
-  
-    item.parentElement.innerHTML = data;
+export const infoModalWindow = (str, inStr, parent) => {
+  const info = document.createElement('div');
+  parent.appendChild(info);
+  info.classList.add('btn__info');
+  info.innerHTML = str;
+  info.addEventListener('click', (even) => {
+    closeModalWindow(inStr);
   });
 };
 
@@ -43,15 +50,23 @@ logoInfo.addEventListener('click', (even) => {
   console.log('Click Logo');
 
   playingField.innerHTML = `
-  <div>Тут будет информация о самом проекте и инструкция по его использованию!<br><br>А пока выбери игру!</div>
-  <div class="btn">Назад</div>
-  `;
+    <div>Тут будет информация о самом проекте и инструкция по его использованию!<br><br>А пока выбери игру!</div>
+    <div class="btn">Назад</div>
+    `;
   back(playingField.querySelector('.btn'), 'Привет!<br><br> Выбери игру или создай свою!');
 });
 
+const back = (item, data) => {
+  item.addEventListener('click', (even) => {
+    even.preventDefault();
+    console.log('Done back');
+
+    item.parentElement.innerHTML = data;
+  });
+};
+
 const gameSelection = (j) => {
   if (j === 0) {
-    console.log('test');
     playingField.innerHTML = '';
     playingField.appendChild(startPlayingField);
   } else if (j === 1) {
@@ -60,6 +75,10 @@ const gameSelection = (j) => {
     startSplendourGame(splendourPlayers);
   } else if (j === 3) {
     startMafiaGame(mafiaPlayers);
+  } else if (j === 4) {
+    startCitadelsGame(citadelsPlayers);
+  } else if (j === 5) {
+    startIndustryGame(industryPlayers);
   }
   else {
     playingField.innerHTML = `
@@ -70,34 +89,33 @@ const gameSelection = (j) => {
   }
 };
 
-const modalWindowDataLoss = () => {
+const modalWindowDataLoss = (j) => {
   const dataLoss = document.createElement('div');
   const dataInLoss = document.createElement('div');
-    dataLoss.classList.add('data__loss');
-    dataInLoss.classList.add('data__in__loss');
-    dataLoss.appendChild(dataInLoss);
-    playingField.appendChild(dataLoss);
-    dataInLoss.innerHTML = `
+  dataLoss.classList.add('data__loss');
+  dataInLoss.classList.add('data__in__loss');
+  dataLoss.appendChild(dataInLoss);
+  playingField.appendChild(dataLoss);
+  dataInLoss.innerHTML = `
     <div>Вы уверены, что хотите уйти? Весь Ваш прогресс пропадёт!</div>
     <div class="loss__btn">
     <div id="btn">Да</div>
     <div id="btn">Нет</div>
     </div>
     `;
-    const lossBtn = dataInLoss.querySelectorAll('#btn');
-    lossBtn.forEach((item, i) => {
-      item.addEventListener('click', (even) => {
-        even.preventDefault();
-  
-        if (i === 0) {
-          gameSelection(i);
-          chessPlayers.players = [];
-          chessPlayers.typeGame = [];
-        } else {
-          dataLoss.remove();
-        }
-      });
-    }); 
+  const lossBtn = dataInLoss.querySelectorAll('#btn');
+  lossBtn.forEach((item, i) => {
+    item.addEventListener('click', (even) => {
+      even.preventDefault();
+
+      if (i === 0) {
+        gameSelection(j);
+        chessPlayers.players = [];
+      } else {
+        dataLoss.remove();
+      }
+    });
+  });
 };
 
 
@@ -108,18 +126,12 @@ export const clickLeftMenu = () => {
       if (playingField.firstElementChild === startPlayingField) {
         gameSelection(j);
       } else {
-        modalWindowDataLoss();
+        modalWindowDataLoss(j);
       }
     });
   });
 };
 
-statisticsFieldItem.forEach((item, i) => {
-  item.addEventListener('click', (even) => {
-    even.preventDefault();
 
-    console.log(item);
-  });
-});
 
 clickLeftMenu();

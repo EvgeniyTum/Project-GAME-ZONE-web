@@ -65,11 +65,19 @@ body {
 }
 
 .project__statistics-field-item {
-  display: block;
+  display: flex;
   /* height: 25px; */
 }
-.project__statistics-field-item:hover {
+.project__statistics-field-name:hover {
   color: green;
+}
+
+.delete {
+  margin-left: 10px;
+  margin-right: 10px;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
 }
 
 .btn {
@@ -77,6 +85,14 @@ body {
 }
 
 .btn:hover {
+  color: green;
+}
+
+.btn__info {
+  margin-top: 10px;
+}
+
+.btn__info:hover {
   color: green;
 }
 
@@ -116,6 +132,7 @@ td, th {
   display:flex;
   align-items:center;
   justify-content:center;
+  backdrop-filter: blur(5px);
   top:0px;
   left:0px;
   width:100vw;
