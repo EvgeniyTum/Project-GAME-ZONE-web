@@ -85,7 +85,8 @@ const gameSelection = (j) => {
       <div>В разработке, но скоро будет готово!<br><br>А пока выбери другую игру!</div>
       <div class="btn">Назад</div>
       `;
-    back(playingField.querySelector('.btn'), 'Привет!<br><br> Выбери игру или создай свою!');
+    back(playingField.querySelector('.btn'), `Привет!<br><br>Приложение Game Zone разработано
+    для удобного ведения счета и сохранения результата в настольных игах!<br><br>Выбери игру или создай свою!`);
   }
 };
 

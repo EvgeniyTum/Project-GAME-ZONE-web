@@ -41,7 +41,9 @@ export const startIndustryGame = (obj) => {
         <div>Не знаешь, как пользоваться таблицей?</div>
       `;
 
-      infoModalWindow(`<div>Жми INFO</div>`, `<div>Тут будет описание, как пользоваться таблицей!</div>
+      infoModalWindow(`<div>Жми INFO</div>`, `<div>После завершения игры внесите количество очков(монет),
+      имеющееся у каждого игрока и нажмите кнопку "ок" справа от вписанных результатов. Победитель будет
+      определен автоматически. По окончанию игры используйте кнопку "Закончить игру".</div>
       <div class="loss__btn">
       <div id="btn">Понятно!</div>
       </div>`, playingField);
@@ -211,7 +213,7 @@ export const startIndustryGame = (obj) => {
 
               sortScore.sort((function (index) {
                 return function (a, b) {
-                  return (a[index] === b[index] ? 0 : (a[index] > b[index] ? 1 : -1));
+                  return (a[index] === b[index] ? 0 : (a[index] < b[index] ? 1 : -1));
                 };
               })(1));
 
